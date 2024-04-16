@@ -1,0 +1,10 @@
+--- openHEVC-openhevc-2.0/libavutil/cpu.c.orig	2017-10-04 15:08:10.000000000 +0200
++++ openHEVC-openhevc-2.0/libavutil/cpu.c	2024-04-15 20:33:33.846167899 +0200
+@@ -39,7 +39,6 @@
+ #include <sys/param.h>
+ #endif
+ #include <sys/types.h>
+-#include <sys/sysctl.h>
+ #endif
+ #if HAVE_UNISTD_H
+ #include <unistd.h>

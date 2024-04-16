@@ -1,0 +1,20 @@
+--- openHEVC-openhevc-2.0/./libavcodec/x86/mathops.h.orig	2017-10-04 15:08:10.000000000 +0200
++++ openHEVC-openhevc-2.0/./libavcodec/x86/mathops.h	2024-04-15 20:37:15.821632022 +0200
+@@ -122,10 +122,16 @@ static inline  int32_t NEG_SSR32( int32_
+ 
+ #define NEG_USR32 NEG_USR32
+ static inline uint32_t NEG_USR32(uint32_t a, int8_t s){
++    if (__builtin_constant_p(s))
+     __asm__ ("shrl %1, %0\n\t"
+          : "+r" (a)
+-         : "ic" ((uint8_t)(-s))
++         : "i" (-s & 0x1F)
+     );
++    else
++        __asm__ ("shrl %1, %0\n\t"
++               : "+r" (a)
++               : "c" ((uint8_t)(-s))
++        );
+     return a;
+ }
+ 
