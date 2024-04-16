@@ -10,6 +10,7 @@ Source0:	https://github.com/OpenHEVC/openHEVC/archive/openhevc-%{version}/%{name
 # Source0-md5:	efc4e49ef9b0ba87ff6eb60d2ea3e1d8
 Patch0:		%{name}-sysctl.patch
 Patch1:		%{name}-asm.patch
+Patch2:		%{name}-libdir.patch
 URL:		https://github.com/OpenHEVC/openHEVC
 BuildRequires:	SDL2-devel >= 2.0
 BuildRequires:	cmake >= 2.8
@@ -40,6 +41,7 @@ Pliki nagłówkowe biblioteki openHEVC.
 %setup -q -n %{name}-openhevc-%{version}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 install -d build
