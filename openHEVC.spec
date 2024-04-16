@@ -11,10 +11,13 @@ Source0:	https://github.com/OpenHEVC/openHEVC/archive/openhevc-%{version}/%{name
 Patch0:		%{name}-sysctl.patch
 Patch1:		%{name}-asm.patch
 Patch2:		%{name}-libdir.patch
+Patch3:		%{name}-x32.patch
 URL:		https://github.com/OpenHEVC/openHEVC
 BuildRequires:	SDL2-devel >= 2.0
 BuildRequires:	cmake >= 2.8
+%ifarch %{ix86} %{x8664}
 BuildRequires:	yasm
+%endif
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -42,14 +45,23 @@ Pliki nagłówkowe biblioteki openHEVC.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
+
+%ifarch x32
+# disable references to asm routines
+%{__sed} -i -e 's/\(define HAVE_.*_EXTERNAL\) \+.*/\1 0/' platform/x86/config.h.in
+%endif
 
 %build
 install -d build
 cd build
-%ifarch %{ix86}
+%ifarch %{ix86} x32
 CFLAGS="%{rpmcflags} -DX86_32"
 %endif
-%cmake ..
+%cmake .. \
+%ifarch x32
+	-DUSE_YASM=OFF
+%endif
 
 %{__make}
 

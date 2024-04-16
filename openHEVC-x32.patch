@@ -1,0 +1,36 @@
+--- openHEVC-openhevc-2.0/CMakeLists.txt.orig	2024-04-16 18:38:09.341210316 +0200
++++ openHEVC-openhevc-2.0/CMakeLists.txt	2024-04-16 18:43:33.946439215 +0200
+@@ -135,7 +135,11 @@ if(YASM_FOUND)
+ if(APPLE)
+     set(YASM_ARGS -f macho64 -m amd64 -DPREFIX ${COMMON_YASM_ARGS})
+ elseif("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86_64")
++  if(CMAKE_SIZEOF_VOID_P EQUAL 4)
++    set(YASM_ARGS -f elfx32  -m amd64 -DX86_32 ${COMMON_YASM_ARGS})
++  else()
+     set(YASM_ARGS -f elf     -m amd64 ${COMMON_YASM_ARGS})
++  endif()
+ elseif("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "i686")
+     set(YASM_ARGS -f elf     -DX86_32 ${COMMON_YASM_ARGS})
+ else()
+--- openHEVC-openhevc-2.0/libavutil/x86/x86inc.asm.orig	2017-10-04 15:08:10.000000000 +0200
++++ openHEVC-openhevc-2.0/libavutil/x86/x86inc.asm	2024-04-16 19:33:22.927275688 +0200
+@@ -74,6 +74,8 @@
+     %define FORMAT_ELF 1
+ %elifidn __OUTPUT_FORMAT__,elf64
+     %define FORMAT_ELF 1
++%elifidn __OUTPUT_FORMAT__,elfx32
++    %define FORMAT_ELF 1
+ %endif
+ 
+ %ifdef PREFIX
+--- openHEVC-openhevc-2.0/libavutil/x86/cpu.c.orig	2017-10-04 15:08:10.000000000 +0200
++++ openHEVC-openhevc-2.0/libavutil/x86/cpu.c	2024-04-16 20:35:52.529221165 +0200
+@@ -62,7 +62,7 @@
+ 
+ #endif /* HAVE_INLINE_ASM */
+ 
+-#if ARCH_X86_64
++#if ARCH_X86_64 || defined(__x86_64__)
+ 
+ #define cpuid_test() 1
+ 
