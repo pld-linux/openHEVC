@@ -15,6 +15,7 @@ Patch3:		%{name}-x32.patch
 URL:		https://github.com/OpenHEVC/openHEVC
 BuildRequires:	SDL2-devel >= 2.0
 BuildRequires:	cmake >= 2.8
+BuildRequires:	rpmbuild(macros) >= 1.605
 %ifarch %{ix86} %{x8664}
 BuildRequires:	yasm
 %endif
